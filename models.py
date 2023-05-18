@@ -14,6 +14,8 @@ def get_user_email():
 
 def get_username():
     return auth.current_user.get('username') if auth.current_user else None
+def get_userID():
+    return auth.current_user.get('id') if auth.current_user else None
 
 def get_time():
     return datetime.datetime.utcnow()
@@ -24,8 +26,13 @@ def get_time():
 # db.define_table('thing', Field('name'))
 #
 ## always commit your models to avoid problems later
+db.define_table("follow",  Field('user_id', 'references auth_user'), Field('following_id', 'references auth_user'))
 
 db.commit()
+
+
+
+
 
 def add_users_for_testing(num_users):
     # Test user names begin with "_".
