@@ -17,7 +17,7 @@ let init = (app) => {
     app.getfollow = function() {
         axios.get(getfollow_url)
         .then(function (result) {
-            app.data.following = result.data.results;
+            app.vue.following = result.data.results;
         });
         
     }
@@ -27,8 +27,8 @@ let init = (app) => {
         axios.post(follow_url, {user: usr}).then(
         axios.get(getfollow_url)
         .then(function (result) {
-            app.data.following = result.data.results;
-            app.data.onchange += 1;
+            app.vue.following = result.data.results;
+            app.vue.onchange += 1;
         }));
         app.data.onchange += 1;
     }
@@ -39,8 +39,8 @@ let init = (app) => {
         axios.post(unfollow_url, {user: usr}).then(
         axios.get(getfollow_url)
         .then(function (result) {
-            app.data.following = result.data.results;
-            app.data.onchange += 1;
+            app.vue.following = result.data.results;
+            app.vue.onchange += 1;
         }));
         app.data.onchange += 1;
     }
@@ -67,7 +67,10 @@ let init = (app) => {
             app.vue.results = result.data.results;
         });
     }
-
+    app.clear = function () {
+        app.vue.query = ""
+        app.search()
+    }
     
     app.search = function () {
         if (app.vue.query.length >= 1) {
@@ -89,6 +92,7 @@ let init = (app) => {
         set_follow: app.setFollow,
         set_unfollow: app.setunFollow,
         get_follow: app.getfollow,
+        clear: app.clear,
         // follows: app.follows,
     };
 

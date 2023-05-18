@@ -69,7 +69,7 @@ def get_users():
 def get_followers():
     results = db((db.follow.user_id == get_userID())).select()
     # print("Get the followings")
-    results =[m['following_id'] for m in results]
+    results =[m['following_id'] for m in results][0:20]
     # print(results)
     return dict(results=results)
 @action("search_users")
@@ -82,7 +82,7 @@ def search_users():
     following = db((db.follow.user_id == get_userID())).select()
     followl = [x for x in results if (x.id in [i['following_id'] for i in following])]
     nonfollow = [x for x in results if not (x.id in [i['following_id'] for i in following])]
-    sortedl = followl + nonfollow
+    sortedl = (followl + nonfollow)[0:20]
     # print(results)
     return dict(results=sortedl)
 @action("set_follow", method="POST")

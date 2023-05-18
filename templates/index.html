@@ -19,7 +19,7 @@
       <div class="field">
         <p class="control has-icons-right">
           <input class="input" type="text" v-model="query" @keyup="search">
-          <span class="icon is-small is-right clickable">
+          <span class="icon is-small is-right clickable" @click="clear">
             <i class="fa fa-times-circle" ></i>
           </span>
         </p>
@@ -29,7 +29,6 @@
           <p class="control" :key="onchange">
             <button class="button">
               <span>{{users.username}}</span>
-              <span>|   {{users.id}}</span>
             </button>
           </p>
           <p class="control">
