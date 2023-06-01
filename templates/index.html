@@ -129,10 +129,18 @@
 
     </div>
     <div class="column is-one-third has-background-light">
+    <div class = "field">
       <div class = "rows">
-      <div class="button row" @click="setyourfeed" v-bind:class="{'is-link': whichfeed == 0}">Your Feed</div>
-      <div class="button row" @click="setminefeed" v-bind:class="{'is-link': whichfeed == 1}">Your Meows</div>
-      <div class="button row" @click="setrecentfeed" v-bind:class="{'is-link': whichfeed == 2}">Recent Meows</div>
+      <div class = "row">
+      <button class="button" @click="setyourfeed" v-bind:class="{'is-link': whichfeed == 0}">Your Feed</button>
+    </div>
+      <div class = "row">
+      <button class="button" @click="setminefeed" v-bind:class="{'is-link': whichfeed == 1}">Your Meows</button>
+    </div>
+      <div class = "row">
+      <button class="button" @click="setrecentfeed" v-bind:class="{'is-link': whichfeed == 2}">Recent Meows</button>
+      </div>
+    </div>
     </div>
       <div class="field">
         <p class="control has-icons-right">
