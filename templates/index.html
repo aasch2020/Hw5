@@ -1,26 +1,144 @@
 [[extend 'layout.html']]
 
 <style>
-[v-cloak] {
-     display: none;
-}
+  [v-cloak] {
+    display: none;
+  }
 </style>
 
 
 <div class="section" id="vue-target" v-cloak>
   <!-- Put here your Vue.js template -->
-
   <div class="columns">
-    <div class="column">
-      Feed. 
-    </div>
+    <div class="column is-two-thirds" v-if="!commenting">
+      <div class="field">
+        <textarea class="textarea" v-model="newmeow" placeholder="What's on your mind?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <div class="control"><button class="button is-link" @click="postmeow">Publish!</button></div>
+      </div>
+      <div v-for="meow in currfeedL">
+        <div class="box">
+          <nav class="level is-mobile">
+            <div class="level-left">
+              <a class="level-item" aria-label="reply">
+                <span class="icon is-small">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span class="ml-2">{{meow.author}}</span>
+              </a>
+            </div>
+            <div class="level-right">
+              <span class="level-item">
+                {{timefix(meow.timestamp)}}
+              </span>
+            </div>
+          </nav>
+          <div class="content">
+            {{meow.content}}
+          </div>
+          <nav class="level is-mobile">
+            <div class="level-left">
+              <a class="level-item" aria-label="reply">
+                <span class="icon is-small">
+                  <i class="fa fa-reply" aria-hidden="true" @click="replymenu(meow)"></i>
+                </span>
+                <span class="ml-1">{{meow.replies}}</span>
+              </a>
+              <a class="level-item" aria-label="retweet">
+                <span class="icon is-small">
+                  <i class="fa fa-retweet" @click="remeow(meow)" aria-hidden="true"></i>
+                </span>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
 
+
+      <div class="columns">
+        <div class="column">
+          Feed.
+        </div>
+      </div>
+    </div>
+    <div class="column is-two-thirds" v-if="commenting">
+      <div class="box">
+        <nav class="level is-mobile">
+          <div class="level-left">
+            <a class="level-item" aria-label="reply">
+              <span class="icon is-small">
+                <i class="fa fa-user"></i>
+              </span>
+              <span class="ml-2">{{currmeow.author}}</span>
+            </a>
+          </div>
+          <div class="level-right">
+            <span class="level-item">
+              {{timefix(currmeow.timestamp)}}
+            </span>
+          </div>
+        </nav>
+        <div class="content">
+          {{currmeow.content}}
+        </div>
+      </div>
+      <div class="field">
+        <textarea class="textarea" v-model="replyfield" placeholder="What's on your mind?" rows="2"></textarea>
+      </div>
+      <div class="field">
+        <div class="control"><button class="button is-link" @click="replmeow(currmeow)">Reply</button></div>
+      </div>
+      <div v-for="meow in replies">
+        <div class="box">
+          <nav class="level is-mobile">
+            <div class="level-left">
+              <a class="level-item" aria-label="reply">
+                <span class="icon is-small">
+                  <i class="fa fa-user"></i>
+                </span>
+                <span class="ml-2">{{meow.author}}</span>
+              </a>
+            </div>
+            <div class="level-right">
+              <span class="level-item">
+                {{timefix(meow.timestamp)}}
+              </span>
+            </div>
+          </nav>
+          <div class="content">
+            {{meow.content}}
+          </div>
+          <nav class="level is-mobile">
+            <div class="level-left">
+              <a class="level-item" aria-label="reply">
+                <span class="icon is-small">
+                  <i class="fa fa-reply" aria-hidden="true" @click="replymenu(meow)"></i>
+                </span>
+                <span class="ml-1">{{meow.replies}}</span>
+              </a>
+              <a class="level-item" aria-label="retweet">
+                <span class="icon is-small">
+                  <i class="fa fa-retweet" @click="remeow(meow)" aria-hidden="true"></i>
+                </span>
+              </a>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+    </div>
     <div class="column is-one-third has-background-light">
+      <div class = "rows">
+      <div class="button row" @click="setyourfeed" v-bind:class="{'is-link': whichfeed == 0}">Your Feed</div>
+      <div class="button row" @click="setminefeed" v-bind:class="{'is-link': whichfeed == 1}">Your Meows</div>
+      <div class="button row" @click="setrecentfeed" v-bind:class="{'is-link': whichfeed == 2}">Recent Meows</div>
+    </div>
       <div class="field">
         <p class="control has-icons-right">
           <input class="input" type="text" v-model="query" @keyup="search">
           <span class="icon is-small is-right clickable" @click="clear">
-            <i class="fa fa-times-circle" ></i>
+            <i class="fa fa-times-circle"></i>
           </span>
         </p>
       </div>
@@ -32,14 +150,15 @@
             </button>
           </p>
           <p class="control">
-            
-            <button class="button is-danger is-outlined" @click="set_unfollow(users)" v-if="following.includes(users.id)">
+
+            <button class="button is-danger is-outlined" @click="set_unfollow(users)"
+              v-if="following.includes(users.id)">
               <span class="icon is-small">
                 <i class="fa fa-check "></i>
               </span>
               <span>Unfollow</span>
             </button>
-            <button class="button is-success is-outlined"  @click="set_follow(users)" v-else>
+            <button class="button is-success is-outlined" @click="set_follow(users)" v-else>
               <span class="icon is-small">
                 <i class="fa fa-check "></i>
               </span>
@@ -47,9 +166,10 @@
             </button>
           </p>
         </div>
+      </div>
+
     </div>
   </div>
-</div>
 </div>
 
 
@@ -61,6 +181,10 @@
   let follow_url = "[[=XML(follow_url)]]";
   let unfollow_url = "[[=XML(unfollow_url)]]";
   let getfollow_url = "[[=XML(getfollow_url)]]";
+  let getmeows_url = "[[=XML(getmeows_url)]]";
+  let postmeow_url = "[[=XML(postmeow_url)]]";
+  let replymeow_url = "[[=XML(replymeow_url)]]";
+  let getreplies_url = "[[=XML(getreplies_url)]]";
 </script>
 <script src="js/index.js"></script>
 [[end]]
